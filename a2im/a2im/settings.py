@@ -131,9 +131,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-STATIC_ROOT = 'meetings/static/meetings'
+COMPRESS_ROOT = 'meetings/static/meetings'
+STATIC_ROOT = '/static/'
 
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'sass --scss {infile} {outfile}'),

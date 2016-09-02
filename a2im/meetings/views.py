@@ -12,9 +12,9 @@ def index(request):
 
 def event(request, event_id):
 	event_from_request = get_object_or_404(Event, id=event_id)
-	companies = Meeting.objects.filter(event=event_from_request)
+	meetings = Meeting.objects.filter(event=event_from_request)
 	context = {
-		'companies': companies,
+		'meetings': meetings,
 		'event': event_from_request
 	}
 	return render(request, 'meetings/index.html', context)

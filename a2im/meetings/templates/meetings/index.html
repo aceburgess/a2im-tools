@@ -8,8 +8,8 @@
 <div class="row">
 	<div class="col-sm-6">
 		<ul>
-			{% for company in companies %}
-			<li>{{ company.name }}</li>
+			{% for meeting in meetings %}
+			<li>{{ meeting.requestor.name }} and {{ meeting.requestee.name }}</li>
 			{% endfor %}
 		</ul>
 	</div>
