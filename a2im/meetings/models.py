@@ -8,7 +8,7 @@ class Event(models.Model):
 	end_date = models.DateTimeField()
 
 	def __str__(self):
-		return self.event_name
+		return self.name
 
 class Company(models.Model):
 	TYPE_OF_COMPANY = (

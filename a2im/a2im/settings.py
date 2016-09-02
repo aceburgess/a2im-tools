@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'meetings',
     'bootstrap3',
+    'crispy_forms',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +126,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+STATICFILES_FINDERS = (
+    'compressor.finders.CompressorFinder',
+)
+
+STATIC_ROOT = 'meetings/static/meetings'
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'sass --scss {infile} {outfile}'),
+)
