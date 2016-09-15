@@ -12,7 +12,6 @@ class CompanyInline(admin.TabularInline):
 	model = Company
 
 class CompanyGroupAdmin(admin.ModelAdmin):
-	# list_display = ('name', 'email', 'type_of_company')
 	inlines = [
 		CompanyInline,
 	]

@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 from django.db import models
 
 import logging
-# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # def _create_hash():
 # 	the_hash = hashlib.sha1()
@@ -31,14 +30,11 @@ class Event(BaseModel):
 	def generate_meetings(self):
 		companies = Company.objects.all()
 		past_companies = []
-		logging.debug(past_companies)
 		for company in companies:
 			for company2 in companies:
 				if company == company2:
-					logging.debug('%s is equal to %s' % (company, company2))
 					continue
 				elif company2 in past_companies:
-					logging.debug('%s is in past_companies' % (company2))
 					continue 
 				meeting = Meeting(
 					event=self,
@@ -46,7 +42,6 @@ class Event(BaseModel):
 					requestee=company2
 				)
 				past_companies.extend([company,])
-				logging.debug(past_companies)
 				meeting.save()
 
 	def determine_meetings(self):
@@ -62,20 +57,6 @@ class Event(BaseModel):
 			else:
 				undecided.extend([meeting,])
 		return {'should_meet': should_meet, 'should_not_meet': should_not_meet, 'undecided': undecided}
-
-
-	# def unique_list_of_companies(self):
-	# 	meetings = Meeting.objects.filter(event=self.id)
-	# 	unique_meetings = []
-	# 	for meeting_side_1 in meetings:
-	# 		for meeting_side_2 in meetings:
-	# 			if meeting_side_1.requestor == meeting_side_2.requestee && meeting_side1.reuqestee == meeting_side_2.requestor
-	# 	return companies
-
-# class MeetingResults(BaseModel):
-# 	meeting_result_1 = models.ForeignKey(Meeting, on_delete=CASCADE)
-# 	meeting_result_2 = models.ForeignKey(Meeting, on_delete=CASCADE)
-# 	should_meet = models.NullBooleanField()
 
 class CompanyGroup(BaseModel):
 	name = models.CharField(max_length=200)
