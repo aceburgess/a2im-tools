@@ -3,13 +3,13 @@
 {% block title %}Companies attending {{ event.name }}{% endblock %}
 
 {% block content %}
-<h1>{{ event.name }}</h1>
+<h1>Upcoming Events:</h1>
 
 <div class="row">
 	<div class="col-sm-6">
 		<ul>
-			{% for meeting in meetings %}
-			<li>{{ meeting.requestor.name }} and {{ meeting.requestee.name }}</li>
+			{% for event in events %}
+			<li><a href="{% url 'event_detail' event.id %}">{{ event.name }}</a></li>
 			{% endfor %}
 		</ul>
 	</div>

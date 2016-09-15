@@ -25,6 +25,22 @@ SECRET_KEY = '5=hw6*_=0%_!a9z7w139onp+qf*elh54uch*-=9+trnab+f4j='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
+
 ALLOWED_HOSTS = []
 
 
@@ -41,6 +57,7 @@ INSTALLED_APPS = [
     'bootstrap3',
     'crispy_forms',
     'compressor',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

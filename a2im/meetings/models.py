@@ -1,8 +1,26 @@
 from __future__ import unicode_literals
 
+# import hashlib
+# from binascii import hexlify
 from django.db import models
 
-class Event(models.Model):
+import logging
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# def _create_hash():
+# 	the_hash = hashlib.sha1()
+# 	return the_hash.hexdigest()[:-8]
+
+
+class BaseModel(models.Model):
+	created_at = models.DateTimeField(auto_now_add = True)
+	modified_at = models.DateTimeField(auto_now = True)
+
+	class Meta:
+		abstract = True
+
+
+class Event(BaseModel):
 	name = models.CharField(max_length=200)
 	start_date = models.DateTimeField()
 	end_date = models.DateTimeField()
@@ -10,7 +28,62 @@ class Event(models.Model):
 	def __str__(self):
 		return self.name
 
-class Company(models.Model):
+	def generate_meetings(self):
+		companies = Company.objects.all()
+		past_companies = []
+		logging.debug(past_companies)
+		for company in companies:
+			for company2 in companies:
+				if company == company2:
+					logging.debug('%s is equal to %s' % (company, company2))
+					continue
+				elif company2 in past_companies:
+					logging.debug('%s is in past_companies' % (company2))
+					continue 
+				meeting = Meeting(
+					event=self,
+					requestor=company,
+					requestee=company2
+				)
+				past_companies.extend([company,])
+				logging.debug(past_companies)
+				meeting.save()
+
+	def determine_meetings(self):
+		meetings = Meeting.objects.filter(event_id=self.id)
+		should_meet = []
+		should_not_meet = []
+		undecided = []
+		for meeting in meetings:
+			if meeting.should_meet() == True:
+				should_meet.extend([meeting,])
+			elif meeting.should_meet() == False:
+				should_not_meet.extend([meeting,])
+			else:
+				undecided.extend([meeting,])
+		return {'should_meet': should_meet, 'should_not_meet': should_not_meet, 'undecided': undecided}
+
+
+	# def unique_list_of_companies(self):
+	# 	meetings = Meeting.objects.filter(event=self.id)
+	# 	unique_meetings = []
+	# 	for meeting_side_1 in meetings:
+	# 		for meeting_side_2 in meetings:
+	# 			if meeting_side_1.requestor == meeting_side_2.requestee && meeting_side1.reuqestee == meeting_side_2.requestor
+	# 	return companies
+
+# class MeetingResults(BaseModel):
+# 	meeting_result_1 = models.ForeignKey(Meeting, on_delete=CASCADE)
+# 	meeting_result_2 = models.ForeignKey(Meeting, on_delete=CASCADE)
+# 	should_meet = models.NullBooleanField()
+
+class CompanyGroup(BaseModel):
+	name = models.CharField(max_length=200)
+
+	def __str__(self):
+		return 'Edit Companies'
+
+class Company(BaseModel):
 	TYPE_OF_COMPANY = (
 		('srv', 'service'),
 		('lbl', 'label'),
@@ -20,6 +93,7 @@ class Company(models.Model):
 	name = models.CharField(max_length=200)
 	email = models.EmailField()
 	type_of_company = models.CharField(max_length=3, choices=TYPE_OF_COMPANY)
+	company_group = models.ForeignKey(CompanyGroup, on_delete=models.CASCADE)
 
 	class Meta:
 		verbose_name_plural = 'companies'
@@ -39,17 +113,34 @@ class Company(models.Model):
 # 	class Meta:
 # 		proxy = True
 
-class Meeting(models.Model):
+class Meeting(BaseModel):
 	event = models.ForeignKey(Event, on_delete=models.CASCADE)
 	requestor = models.ForeignKey(Company, related_name="%(app_label)s_%(class)s_requestor", on_delete=models.CASCADE)
 	requestee = models.ForeignKey(Company, related_name="%(app_label)s_%(class)s_requestee", on_delete=models.CASCADE)
-	want_to_meet = models.NullBooleanField()
-	available_from = models.TimeField()
-	available_until = models.TimeField()
-	comments = models.TextField(max_length=200)
+	requestor_wants_to_meet = models.NullBooleanField()
+	requestee_wants_to_meet = models.NullBooleanField()
+	# should_meet = models.NullBooleanField()
+	# available_from = models.TimeField()
+	# available_until = models.TimeField()
+	comments = models.TextField(max_length=200, blank=True)
+	# unique_url = models.CharField(max_length = 8)
+
+	# def save(self, *args, **kwargs):
+	# 	self.unique_url = _create_hash()
+	# 	super(Meeting, self).save(*args, **kwargs)
 
 	def __str__(self):
 		return 'Meeting between %s and %s' % (self.requestor, self.requestee)
+
+	def should_meet(self):
+		if self.requestor_wants_to_meet == True and self.requestee_wants_to_meet == True:
+			return True
+		elif self.requestor_wants_to_meet == False or self.requestee_wants_to_meet == False:
+			return False
+		else:
+			return 'Undecided'
+
+
 
 
 

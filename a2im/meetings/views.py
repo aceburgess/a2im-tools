@@ -13,12 +13,18 @@ def index(request):
 
 def event_detail(request, pk):
 	event_from_request = get_object_or_404(Event, id=pk)
-	meetings = Meeting.objects.filter(event=event_from_request)
+	# meetings = Meeting.objects.filter(event=event_from_request)
+	meetings = event_from_request.determine_meetings()
+
+	# meetings = Event.unique_list_of_companies(event_from_request)
 	context = {
 		'meetings': meetings,
+		'should_meet': meetings['should_meet'],
+		'should_not_meet': meetings['should_not_meet'],
+		'maybe_should_meet': meetings['undecided'],
 		'event': event_from_request
 	}
-	return render(request, 'meetings/index.html', context)
+	return render(request, 'meetings/event_detail.html', context)
 
 def event_new(request):
 	if request.method == "POST":
