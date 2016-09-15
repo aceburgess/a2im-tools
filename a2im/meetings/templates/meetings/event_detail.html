@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Companies attending {{ event.name }}{% endblock %}
+
+{% block content %}
+<h1>Meetings Overview for {{ event.name }}</h1>
+
+<div class="row">
+	<div class="col-sm-4">
+		<h2>Want to Meet</h2>
+		<ul>
+			{% for meeting in should_meet %}
+			<li>{{ meeting.requestor.name }} and {{ meeting.requestee.name }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="col-sm-4">
+		<h2>Don't Want to Meet</h2>
+		<ul>
+			{% for meeting in should_not_meet %}
+			<li>{{ meeting.requestor.name }} and {{ meeting.requestee.name }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="col-sm-4">
+		<h2>Undecided</h2>
+		<ul>
+			{% for meeting in maybe_should_meet %}
+			<li>{{ meeting.requestor.name }} and {{ meeting.requestee.name }}</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+</div>
+
+{% endblock %}
+
