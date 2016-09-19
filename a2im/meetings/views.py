@@ -13,6 +13,14 @@ def index(request):
 
 def event_detail(request, pk):
 	event_from_request = get_object_or_404(Event, id=pk)
+	if request.method == "POST":
+		if 'generate-meetings' in request.POST:
+			event_from_request.generate_meetings()
+			return redirect('event_detail', pk=event_from_request.pk)
+		elif 'delete-meetings' in request.POST:
+			event_from_request.delete_meetings()
+			return redirect('event_detail', pk=event_from_request.pk)
+
 	meetings = event_from_request.determine_meetings()
 
 	context = {
@@ -22,6 +30,7 @@ def event_detail(request, pk):
 		'maybe_should_meet': meetings['undecided'],
 		'event': event_from_request
 	}
+
 	return render(request, 'meetings/event_detail.html', context)
 
 def event_new(request):

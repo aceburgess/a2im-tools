@@ -5,6 +5,12 @@
 {% block content %}
 <h1>Meetings Overview for {{ event.name }}</h1>
 
+<form action="{% url 'event_detail' event.id %}" method="POST">
+	{% csrf_token %}
+	<input class="btn btn-success" id="generate-meetings" type="submit" name="generate-meetings" value="Generate Meetings">
+	<input class="btn btn-danger" id="delete-meetings" type="submit" name="delete-meetings" value="Delete All Meetings">
+</form>
+
 <div class="row">
 	<div class="col-sm-4">
 		<h2>Want to Meet</h2>

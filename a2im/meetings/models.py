@@ -44,6 +44,10 @@ class Event(BaseModel):
 				past_companies.extend([company,])
 				meeting.save()
 
+	def delete_meetings(self):
+		meetings = Meeting.objects.filter(event_id=self.id)
+		meetings.delete()
+
 	def determine_meetings(self):
 		meetings = Meeting.objects.filter(event_id=self.id)
 		should_meet = []
