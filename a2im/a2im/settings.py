@@ -96,11 +96,10 @@ WSGI_APPLICATION = 'a2im.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'a2im',
-        'USER': 'root',
-        'PASSWORD': 'abc123',
-        'HOST': '127.0.0.1',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
